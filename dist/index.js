@@ -13,17 +13,17 @@ var Workout = /** @class */ (function () {
     Workout.newId = 0;
     return Workout;
 }());
-var Exercises = /** @class */ (function () {
-    function Exercises(name, sets, reps, weight) {
+var Exercise = /** @class */ (function () {
+    function Exercise(name, sets, reps, weight) {
         this.name = name;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
-        Exercises.newId++;
-        this.id = Exercises.newId;
+        Exercise.newId++;
+        this.id = Exercise.newId;
     }
-    Exercises.newId = 0;
-    return Exercises;
+    Exercise.newId = 0;
+    return Exercise;
 }());
 function addWorkout(event) {
     event.preventDefault();
@@ -49,7 +49,7 @@ function workoutBoxTemplate(workout) {
     var workoutName = document.createElement("p");
     var workoutDate = document.createElement("p");
     var workoutDuration = document.createElement("p");
-    var deleteButton = createButton("deleteButton", "Delete", function (event) { return deleteExercise(event); });
+    var deleteButton = createButton("deleteButton", "Delete", function (event) { return deleteWorkout(event); });
     var editButton = createButton("editButton", "Edit", function (event) { return editWorkout(event, workoutBox, workout, deleteButton); });
     workoutName.textContent = workout.name;
     workoutDate.textContent = workout.date;
@@ -60,6 +60,9 @@ function workoutBoxTemplate(workout) {
     else {
         workoutBoxesDiv.appendChild(workoutBox);
     }
+    setTimeout(function () {
+        workoutBox.classList.add('show');
+    }, 100);
     workoutBox.appendChild(workoutName);
     workoutBox.appendChild(workoutDate);
     workoutBox.appendChild(workoutBoxDetails);
@@ -79,7 +82,7 @@ function addPendingExercise() {
     var exerciseSets = Number(exerciseSetsInput.value);
     var exerciseReps = Number(exerciseRepsInput.value);
     var exerciseWeight = Number(exerciseWeightInput.value);
-    var exercise = new Exercises(exerciseName, exerciseSets, exerciseReps, exerciseWeight);
+    var exercise = new Exercise(exerciseName, exerciseSets, exerciseReps, exerciseWeight);
     exercisesArray.push(exercise);
     exercisesPendingTemplate(exercise);
     exerciseNameInput.value = '';
@@ -95,15 +98,32 @@ function exercisesPendingTemplate(exercises) {
     var exerciseDivElement = document.createElement("div");
     exerciseDivElement.id = exercises.id.toString();
     var exerciseDetails = document.createElement("p");
-    var removeExercise = createButton("deleteExercise", "Remove", function (event) { return deleteExercise(event); });
+    var removeExercise = createButton("deleteExercise", "Remove", function (event) { return deletePendingExercise(event); });
     exerciseAddH3.textContent = "Exercise: " + counter;
     exerciseDetails.textContent = exercises.name + " (" + exercises.sets + " X " + exercises.reps + ") Weight: " + exercises.weight + " kg";
+    setTimeout(function () {
+        exercisesToAddArea.classList.add('show');
+    }, 100);
     exerciseDivElement === null || exerciseDivElement === void 0 ? void 0 : exerciseDivElement.appendChild(exerciseAddH3);
     exerciseDivElement === null || exerciseDivElement === void 0 ? void 0 : exerciseDivElement.appendChild(exerciseDetails);
     exerciseDivElement === null || exerciseDivElement === void 0 ? void 0 : exerciseDivElement.appendChild(removeExercise);
     exercisesToAddArea === null || exercisesToAddArea === void 0 ? void 0 : exercisesToAddArea.appendChild(exerciseDivElement);
     pendingExercisesDiv === null || pendingExercisesDiv === void 0 ? void 0 : pendingExercisesDiv.appendChild(exercisesToAddArea);
     counter++;
+}
+function deletePendingExercise(event) {
+    var _a;
+    var target = event.target;
+    var parentElement = target.parentElement;
+    if (parentElement) {
+        var exerciseId_1 = parseInt(parentElement.id);
+        exercisesArray = exercisesArray.filter(function (exercise) { return exercise.id !== exerciseId_1; });
+        (_a = parentElement.parentElement) === null || _a === void 0 ? void 0 : _a.classList.add('hide');
+        setTimeout(function () {
+            var _a;
+            (_a = parentElement.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
+        }, 500);
+    }
 }
 function workoutExerciseInBox(workout, workoutBox) {
     var excersicesAreaDiv = document.createElement("div");
@@ -113,7 +133,7 @@ function workoutExerciseInBox(workout, workoutBox) {
         var exerciseWithButtonsDiv = document.createElement("div");
         exerciseWithButtonsDiv.classList.add("exerciseWithButtonsDiv");
         var changeExercises = createButton("changeExercise", "Change", function (event) { return changeWorkoutInBox(event, workout, exercise.id); });
-        var xExercise = createButton("xExercise", "X", function (event) { return deleteExercise(event); });
+        var xExercise = createButton("xExercise", "X", function (event) { return deleteExerciseInBox(event, workout, exercise.id); });
         workoutExercises.textContent = exercise.name + " (" + exercise.sets + " X " + exercise.reps + ") Weight: " + exercise.weight + " kg";
         exerciseWithButtonsDiv.appendChild(workoutExercises);
         exerciseWithButtonsDiv.appendChild(changeExercises);
@@ -121,6 +141,20 @@ function workoutExerciseInBox(workout, workoutBox) {
         excersicesAreaDiv.appendChild(exerciseWithButtonsDiv);
     });
     workoutBox.appendChild(excersicesAreaDiv);
+}
+function deleteExerciseInBox(event, workout, exerciseId) {
+    var _a;
+    var target = event.target;
+    var exerciseToDelete = workout.exercises.find(function (exercise) { return exercise.id === exerciseId; });
+    if (target && exerciseToDelete) {
+        var exerciseToDeleteIndex = workout.exercises.indexOf(exerciseToDelete);
+        workout.exercises.splice(exerciseToDeleteIndex, 1);
+        (_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.classList.add('removing'); // Add 'removing' class
+        setTimeout(function () {
+            var _a;
+            (_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
+        }, 500);
+    }
 }
 function changeWorkoutInBox(event, workout, exerciseId) {
     var target = event.target;
@@ -141,16 +175,13 @@ function changeWorkoutInBox(event, workout, exerciseId) {
         }
     }
 }
-function deleteExercise(event) {
-    var _a;
+function deleteWorkout(event) {
     var target = event.target;
     var parentElement = target.parentElement;
-    if (parentElement) {
-        var exerciseId_1 = parseInt(parentElement.id);
-        exercisesArray = exercisesArray.filter(function (exercise) { return exercise.id !== exerciseId_1; });
-        (_a = parentElement.parentElement) === null || _a === void 0 ? void 0 : _a.classList.remove("exercises-to-add");
+    parentElement.classList.add('hide');
+    setTimeout(function () {
         parentElement.remove();
-    }
+    }, 500);
 }
 function editWorkout(event, workoutBox, workout, deleteButton) {
     var xExercise = document.querySelectorAll(".xExercise");
@@ -182,7 +213,12 @@ function updateButtonHandler(event, workout, editButton, cancelButton, updateBut
     workout.name = newWorkoutName;
     workout.date = newWorkoutDate;
     workout.duration = newWorkoutDuration;
-    workoutBoxTemplate(workout);
+    var workoutNameElement = workoutBox.querySelector(':first-child');
+    var workoutDateElement = workoutBox.querySelector(':nth-child(2)');
+    var workoutDurationElement = workoutBox.querySelector(':nth-child(5)');
+    workoutNameElement.textContent = newWorkoutName;
+    workoutDateElement.textContent = newWorkoutDate;
+    workoutDurationElement.textContent = newWorkoutDuration + " Mins";
     cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox);
 }
 function cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox) {

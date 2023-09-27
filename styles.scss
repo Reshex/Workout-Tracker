@@ -120,6 +120,25 @@ body {
   }
 }
 
+.workout-box,
+.exercises-to-add {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.workout-box.show,
+.exercises-to-add.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.workout-box.hide,
+.exercises-to-add.hide {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .my-workouts {
   &__subtitle {
     text-align: left;
@@ -158,11 +177,17 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s, transform 0.5s;
 
-        p{
+        p {
           max-width: 15vw;
-          
         }
+      }
+      .exerciseWithButtonsDiv.removing {
+        opacity: 0;
+        transform: translateY(-20px);
       }
 
       .xExercise,
