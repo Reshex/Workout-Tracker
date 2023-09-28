@@ -360,6 +360,8 @@ function deleteFromLocalStorage(workoutId: Number) {
     }
 }
 
+// add update local storage
+// fix bug with cancel button "updating"
+// fix bug with buttons showing when clicking edit on another box
 // add navbar with two pages
-// add another entity with recommended excersices
-// add local storage
+// add join method 
