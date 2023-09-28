@@ -1,6 +1,8 @@
 let exercisesArray: Exercise[] = [];
 let editMode = false;
 let counter: number = 1
+let lastAssignedId = parseInt(localStorage.getItem('lastAssignedId') || '0') || 0;
+loadFromLocalStorage()
 
 class Workout {
     private static newId = 0;
@@ -24,7 +26,7 @@ class Exercise {
     }
 }
 
-function addWorkout(event: Event) {
+function addWorkout(event: MouseEvent) {
     event.preventDefault();
 
     const form = document.querySelector(".form ") as HTMLFormElement;
@@ -41,6 +43,7 @@ function addWorkout(event: Event) {
     form.reset();
     pendingExercisesDiv.textContent = "";
     counter = 1
+    saveToLocalStorage(workout)
 }
 
 function workoutBoxTemplate(workout: Workout) {
@@ -55,7 +58,7 @@ function workoutBoxTemplate(workout: Workout) {
     const workoutDate = document.createElement("p") as HTMLParagraphElement;
     const workoutDuration = document.createElement("p") as HTMLParagraphElement;
 
-    const deleteButton = createButton("deleteButton", "Delete", (event: MouseEvent) => deleteWorkout(event));
+    const deleteButton = createButton("deleteButton", "Delete", (event: MouseEvent) => deleteWorkout(event, workout.id));
     const editButton = createButton("editButton", "Edit", (event: MouseEvent) => editWorkout(event, workoutBox, workout, deleteButton));
 
     workoutName.textContent = workout.name;
@@ -209,7 +212,7 @@ function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: num
     }
 }
 
-function deleteWorkout(event: MouseEvent) {
+function deleteWorkout(event: MouseEvent, workoutId: Number) {
     let target = event.target as HTMLInputElement;
     let parentElement = target.parentElement as HTMLElement;
 
@@ -217,6 +220,7 @@ function deleteWorkout(event: MouseEvent) {
     setTimeout(() => {
         parentElement.remove();
     }, 500);
+    deleteFromLocalStorage(workoutId)
 }
 
 function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Workout, deleteButton: HTMLInputElement) {
@@ -304,6 +308,58 @@ function createInput(type: string, className: string, value: string, placeholder
     input.placeholder = placeholder;
     return input;
 }
+
+function saveToLocalStorage(workoutDetails: Workout) {
+    lastAssignedId++;
+
+    workoutDetails.id = lastAssignedId;
+
+    const workouts = localStorage.getItem("workouts")
+    let parsedWorkouts: Workout[] = workouts ? JSON.parse(workouts) : [];
+    console.log(parsedWorkouts);
+
+    if (Array.isArray(parsedWorkouts)) {
+        parsedWorkouts.push(workoutDetails);
+        console.log(parsedWorkouts);
+    } else {
+        parsedWorkouts = [workoutDetails];
+        console.log(parsedWorkouts);
+    }
+    console.log(parsedWorkouts);
+    localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+
+    localStorage.setItem('lastAssignedId', String(lastAssignedId));
+}
+
+function loadFromLocalStorage() {
+    const workouts = localStorage.getItem("workouts");
+
+    if (workouts) {
+        let parsedWorkouts = JSON.parse(workouts);
+
+        if (Array.isArray(parsedWorkouts)) {
+            parsedWorkouts.forEach((workout: Workout) => {
+                workoutBoxTemplate(workout);
+            })
+        } else {
+            console.error("Stored workouts is not an array.");
+        }
+    }
+}
+
+function deleteFromLocalStorage(workoutId: Number) {
+    const workouts = localStorage.getItem("workouts")
+    let parsedWorkouts: Workout[] = JSON.parse(workouts!);
+
+    const index = parsedWorkouts.findIndex(workout => workout.id === Number(workoutId));
+
+    if (index !== -1) {
+        parsedWorkouts.splice(index, 1);
+        console.log(parsedWorkouts);
+        localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+    }
+}
+
 // add navbar with two pages
 // add another entity with recommended excersices
 // add local storage

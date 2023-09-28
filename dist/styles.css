@@ -159,13 +159,15 @@ body {
 .my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv {
   display: flex;
   justify-content: space-between;
+  text-align: center;
   align-items: center;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.5s, transform 0.5s;
 }
 .my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv p {
-  max-width: 15vw;
+  min-width: 11vw;
+  margin-left: 2vw;
 }
 .my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv.removing {
   opacity: 0;

@@ -1,6 +1,8 @@
 var exercisesArray = [];
 var editMode = false;
 var counter = 1;
+var lastAssignedId = parseInt(localStorage.getItem('lastAssignedId') || '0') || 0;
+loadFromLocalStorage();
 var Workout = /** @class */ (function () {
     function Workout(name, date, duration, exercisesArray) {
         this.name = name;
@@ -38,6 +40,7 @@ function addWorkout(event) {
     form.reset();
     pendingExercisesDiv.textContent = "";
     counter = 1;
+    saveToLocalStorage(workout);
 }
 function workoutBoxTemplate(workout) {
     var workoutBoxesDiv = document.querySelector(".workout-details");
@@ -49,7 +52,7 @@ function workoutBoxTemplate(workout) {
     var workoutName = document.createElement("p");
     var workoutDate = document.createElement("p");
     var workoutDuration = document.createElement("p");
-    var deleteButton = createButton("deleteButton", "Delete", function (event) { return deleteWorkout(event); });
+    var deleteButton = createButton("deleteButton", "Delete", function (event) { return deleteWorkout(event, workout.id); });
     var editButton = createButton("editButton", "Edit", function (event) { return editWorkout(event, workoutBox, workout, deleteButton); });
     workoutName.textContent = workout.name;
     workoutDate.textContent = workout.date;
@@ -175,13 +178,14 @@ function changeWorkoutInBox(event, workout, exerciseId) {
         }
     }
 }
-function deleteWorkout(event) {
+function deleteWorkout(event, workoutId) {
     var target = event.target;
     var parentElement = target.parentElement;
     parentElement.classList.add('hide');
     setTimeout(function () {
         parentElement.remove();
     }, 500);
+    deleteFromLocalStorage(workoutId);
 }
 function editWorkout(event, workoutBox, workout, deleteButton) {
     var xExercise = document.querySelectorAll(".xExercise");
@@ -250,6 +254,48 @@ function createInput(type, className, value, placeholder) {
     input.value = value;
     input.placeholder = placeholder;
     return input;
+}
+function saveToLocalStorage(workoutDetails) {
+    lastAssignedId++;
+    workoutDetails.id = lastAssignedId;
+    var workouts = localStorage.getItem("workouts");
+    var parsedWorkouts = workouts ? JSON.parse(workouts) : [];
+    console.log(parsedWorkouts);
+    if (Array.isArray(parsedWorkouts)) {
+        parsedWorkouts.push(workoutDetails);
+        console.log(parsedWorkouts);
+    }
+    else {
+        parsedWorkouts = [workoutDetails];
+        console.log(parsedWorkouts);
+    }
+    console.log(parsedWorkouts);
+    localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+    localStorage.setItem('lastAssignedId', String(lastAssignedId));
+}
+function loadFromLocalStorage() {
+    var workouts = localStorage.getItem("workouts");
+    if (workouts) {
+        var parsedWorkouts = JSON.parse(workouts);
+        if (Array.isArray(parsedWorkouts)) {
+            parsedWorkouts.forEach(function (workout) {
+                workoutBoxTemplate(workout);
+            });
+        }
+        else {
+            console.error("Stored workouts is not an array.");
+        }
+    }
+}
+function deleteFromLocalStorage(workoutId) {
+    var workouts = localStorage.getItem("workouts");
+    var parsedWorkouts = JSON.parse(workouts);
+    var index = parsedWorkouts.findIndex(function (workout) { return workout.id === Number(workoutId); });
+    if (index !== -1) {
+        parsedWorkouts.splice(index, 1);
+        console.log(parsedWorkouts);
+        localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+    }
 }
 // add navbar with two pages
 // add another entity with recommended excersices

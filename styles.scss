@@ -176,13 +176,15 @@ body {
       .exerciseWithButtonsDiv {
         display: flex;
         justify-content: space-between;
+        text-align: center;
         align-items: center;
         opacity: 1;
         transform: translateY(0);
         transition: opacity 0.5s, transform 0.5s;
 
         p {
-          max-width: 15vw;
+          min-width: 11vw;
+          margin-left: 2vw;
         }
       }
       .exerciseWithButtonsDiv.removing {
