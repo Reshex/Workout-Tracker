@@ -151,22 +151,22 @@ function deletePendingExercise(event: MouseEvent) {
 
 function workoutExerciseInBox(workout: Workout, workoutBox: HTMLDivElement) {
     const excersicesAreaDiv = document.createElement("div") as HTMLDivElement;
-    excersicesAreaDiv.classList.add("excersices-area-div")
+    excersicesAreaDiv.classList.add("excersices-area-div");
 
     workout.exercises.forEach((exercise) => {
         const workoutExercises = document.createElement("p") as HTMLParagraphElement;
 
         const exerciseWithButtonsDiv = document.createElement("div") as HTMLParagraphElement;
-        exerciseWithButtonsDiv.classList.add("exerciseWithButtonsDiv")
+        exerciseWithButtonsDiv.classList.add("exerciseWithButtonsDiv");
 
         const changeExercises = createButton("changeExercise", "Change", (event: MouseEvent) => changeWorkoutInBox(event, workout, exercise.id)) as HTMLInputElement;
         const xExercise = createButton("xExercise", "X", (event: MouseEvent) => deleteExerciseInBox(event, workout, exercise.id)) as HTMLInputElement;
 
         workoutExercises.textContent = `${exercise.name} (${exercise.sets} X ${exercise.reps}) Weight: ${exercise.weight} kg`;
-        exerciseWithButtonsDiv.appendChild(workoutExercises)
-        exerciseWithButtonsDiv.appendChild(changeExercises)
-        exerciseWithButtonsDiv.appendChild(xExercise)
-        excersicesAreaDiv.appendChild(exerciseWithButtonsDiv)
+        exerciseWithButtonsDiv.appendChild(workoutExercises);
+        exerciseWithButtonsDiv.appendChild(changeExercises);
+        exerciseWithButtonsDiv.appendChild(xExercise);
+        excersicesAreaDiv.appendChild(exerciseWithButtonsDiv);
 
     });
     workoutBox.appendChild(excersicesAreaDiv);
@@ -193,10 +193,10 @@ function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: num
     let parentElement = target.parentElement as HTMLDivElement;
     let pExercise = parentElement.firstChild as HTMLParagraphElement;
 
-    const exerciseNameInput = (document.querySelector(".form__exercise-name") as HTMLInputElement).value;
-    const exerciseSetsInput = Number((document.querySelector(".form__exercise-sets") as HTMLInputElement).value);
-    const exerciseRepsInput = Number((document.querySelector(".form__exercise-reps") as HTMLInputElement).value);
-    const exerciseWeightInput = Number((document.querySelector(".form__exercise-weight") as HTMLInputElement).value);
+    let exerciseNameInput = (document.querySelector(".form__exercise-name") as HTMLInputElement).value;
+    let exerciseSetsInput = Number((document.querySelector(".form__exercise-sets") as HTMLInputElement).value);
+    let exerciseRepsInput = Number((document.querySelector(".form__exercise-reps") as HTMLInputElement).value);
+    let exerciseWeightInput = Number((document.querySelector(".form__exercise-weight") as HTMLInputElement).value);
 
     if (target) {
         pExercise.textContent = `${exerciseNameInput} (${exerciseSetsInput} X ${exerciseRepsInput}) Weight: ${exerciseWeightInput} kg`
@@ -208,6 +208,11 @@ function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: num
             exerciseToUpdate.sets = exerciseSetsInput;
             exerciseToUpdate.reps = exerciseRepsInput;
             exerciseToUpdate.weight = exerciseWeightInput;
+
+            (document.querySelector(".form__exercise-name") as HTMLInputElement).value = "";
+            (document.querySelector(".form__exercise-sets") as HTMLInputElement).value = "";
+            (document.querySelector(".form__exercise-reps") as HTMLInputElement).value = "";
+            (document.querySelector(".form__exercise-weight") as HTMLInputElement).value = "";
         }
     }
 }
@@ -224,8 +229,8 @@ function deleteWorkout(event: MouseEvent, workoutId: Number) {
 }
 
 function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Workout, deleteButton: HTMLInputElement) {
-    const xExercise = document.querySelectorAll(".xExercise") as NodeListOf<HTMLElement>;
-    const changeExercise = document.querySelectorAll(".changeExercise") as NodeListOf<HTMLElement>;
+    const xExercise = workoutBox.querySelectorAll(".xExercise") as NodeListOf<HTMLElement>;
+    const changeExercise = workoutBox.querySelectorAll(".changeExercise") as NodeListOf<HTMLElement>;
 
     let target = event.target as HTMLInputElement;
 
@@ -269,6 +274,9 @@ function updateButtonHandler(event: MouseEvent, workout: Workout, editButton: HT
     workoutNameElement.textContent = newWorkoutName;
     workoutDateElement.textContent = newWorkoutDate;
     workoutDurationElement.textContent = `${newWorkoutDuration} Mins`;
+
+    console.log(workout);
+    updateLocalStorage(workout);
 
     cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox)
 }
@@ -356,6 +364,18 @@ function deleteFromLocalStorage(workoutId: Number) {
     if (index !== -1) {
         parsedWorkouts.splice(index, 1);
         console.log(parsedWorkouts);
+        localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+    }
+}
+
+function updateLocalStorage(updatedWorkout: Workout) {
+    const workouts = localStorage.getItem("workouts");
+    let parsedWorkouts: Workout[] = workouts ? JSON.parse(workouts) : [];
+
+    const index = parsedWorkouts.findIndex(workout => workout.id === updatedWorkout.id);
+
+    if (index !== -1) {
+        parsedWorkouts[index] = updatedWorkout;
         localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
     }
 }

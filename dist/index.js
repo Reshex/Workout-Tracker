@@ -175,6 +175,10 @@ function changeWorkoutInBox(event, workout, exerciseId) {
             exerciseToUpdate.sets = exerciseSetsInput;
             exerciseToUpdate.reps = exerciseRepsInput;
             exerciseToUpdate.weight = exerciseWeightInput;
+            document.querySelector(".form__exercise-name").value = "";
+            document.querySelector(".form__exercise-sets").value = "";
+            document.querySelector(".form__exercise-reps").value = "";
+            document.querySelector(".form__exercise-weight").value = "";
         }
     }
 }
@@ -188,8 +192,8 @@ function deleteWorkout(event, workoutId) {
     deleteFromLocalStorage(workoutId);
 }
 function editWorkout(event, workoutBox, workout, deleteButton) {
-    var xExercise = document.querySelectorAll(".xExercise");
-    var changeExercise = document.querySelectorAll(".changeExercise");
+    var xExercise = workoutBox.querySelectorAll(".xExercise");
+    var changeExercise = workoutBox.querySelectorAll(".changeExercise");
     var target = event.target;
     if (target && !editMode) {
         target.classList.add("hidden");
@@ -223,6 +227,8 @@ function updateButtonHandler(event, workout, editButton, cancelButton, updateBut
     workoutNameElement.textContent = newWorkoutName;
     workoutDateElement.textContent = newWorkoutDate;
     workoutDurationElement.textContent = newWorkoutDuration + " Mins";
+    console.log(workout);
+    updateLocalStorage(workout);
     cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox);
 }
 function cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox) {
@@ -294,6 +300,15 @@ function deleteFromLocalStorage(workoutId) {
     if (index !== -1) {
         parsedWorkouts.splice(index, 1);
         console.log(parsedWorkouts);
+        localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
+    }
+}
+function updateLocalStorage(updatedWorkout) {
+    var workouts = localStorage.getItem("workouts");
+    var parsedWorkouts = workouts ? JSON.parse(workouts) : [];
+    var index = parsedWorkouts.findIndex(function (workout) { return workout.id === updatedWorkout.id; });
+    if (index !== -1) {
+        parsedWorkouts[index] = updatedWorkout;
         localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
     }
 }
