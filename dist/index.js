@@ -314,6 +314,5 @@ function updateLocalStorage(updatedWorkout) {
     }
 }
 // fix bug with cancel button "updating"
-//add required to fields
+// add required to fields
 // add join method
-// remove scrollbar

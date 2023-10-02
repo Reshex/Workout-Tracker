@@ -240,7 +240,8 @@ function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Wor
         const updateButton = createButton("updateButton", "Update", (event: MouseEvent) => updateButtonHandler(event, workout, target, cancelButton, updateButton, workoutBox));
         const cancelButton = createButton("cancelButton", "Cancel", () => removeEditButtons(target, cancelButton, updateButton, workoutBox));
         cancelButton.addEventListener("click", () => {
-            location.reload()
+            location.reload();
+            
         })
         const nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         const dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
@@ -381,6 +382,5 @@ function updateLocalStorage(updatedWorkout: Workout) {
 }
 
 // fix bug with cancel button "updating"
-//add required to fields
+// add required to fields
 // add join method
-// remove scrollbar
