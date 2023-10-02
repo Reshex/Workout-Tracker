@@ -189,6 +189,7 @@ function deleteExerciseInBox(event: MouseEvent, workout: Workout, exerciseId: nu
 }
 
 function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: number) {
+    const form = document.querySelector(".form") as HTMLFormElement;
     let target = event.target as HTMLInputElement;
     let parentElement = target.parentElement as HTMLDivElement;
     let pExercise = parentElement.firstChild as HTMLParagraphElement;
@@ -208,11 +209,7 @@ function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: num
             exerciseToUpdate.sets = exerciseSetsInput;
             exerciseToUpdate.reps = exerciseRepsInput;
             exerciseToUpdate.weight = exerciseWeightInput;
-
-            (document.querySelector(".form__exercise-name") as HTMLInputElement).value = "";
-            (document.querySelector(".form__exercise-sets") as HTMLInputElement).value = "";
-            (document.querySelector(".form__exercise-reps") as HTMLInputElement).value = "";
-            (document.querySelector(".form__exercise-weight") as HTMLInputElement).value = "";
+            form.reset()
         }
     }
 }
@@ -236,13 +233,15 @@ function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Wor
 
     if (target && !editMode) {
         target.classList.add("hidden");
-        deleteButton.classList.add("hidden")
+        deleteButton.classList.add("hidden");
         xExercise.forEach(button => button.style.display = "flex");
         changeExercise.forEach(button => button.style.display = "flex");
 
         const updateButton = createButton("updateButton", "Update", (event: MouseEvent) => updateButtonHandler(event, workout, target, cancelButton, updateButton, workoutBox));
-        const cancelButton = createButton("cancelButton", "Cancel", () => cancelButtonHandler(target, cancelButton, updateButton, workoutBox));
-
+        const cancelButton = createButton("cancelButton", "Cancel", () => removeEditButtons(target, cancelButton, updateButton, workoutBox));
+        cancelButton.addEventListener("click", () => {
+            location.reload()
+        })
         const nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         const dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
         const durationInput = createInput("number", "workout-duration temp-input", workout.duration.toString(), "Duration");
@@ -278,12 +277,12 @@ function updateButtonHandler(event: MouseEvent, workout: Workout, editButton: HT
     console.log(workout);
     updateLocalStorage(workout);
 
-    cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox)
+    removeEditButtons(editButton, cancelButton, updateButton, workoutBox)
 }
 
-function cancelButtonHandler(editButton: HTMLInputElement, cancelButton: HTMLInputElement, updateButton: HTMLInputElement, workoutBox: HTMLDivElement) {
+function removeEditButtons(editButton: HTMLInputElement, cancelButton: HTMLInputElement, updateButton: HTMLInputElement, workoutBox: HTMLDivElement) {
     const tempInputs = workoutBox.querySelectorAll(".temp-input");
-    const deleteButton = workoutBox.querySelector(".deleteButton")
+    const deleteButton = workoutBox.querySelector(".deleteButton");
     const xExercise = document.querySelectorAll(".xExercise") as NodeListOf<HTMLElement>;
     const changeExercise = document.querySelectorAll(".changeExercise") as NodeListOf<HTMLElement>;
 
@@ -297,6 +296,7 @@ function cancelButtonHandler(editButton: HTMLInputElement, cancelButton: HTMLInp
     updateButton.remove();
 
     editMode = false;
+
 }
 
 function createButton(className: string, value: string, clickHandler: any) {
@@ -380,8 +380,7 @@ function updateLocalStorage(updatedWorkout: Workout) {
     }
 }
 
-// add update local storage
 // fix bug with cancel button "updating"
-// fix bug with buttons showing when clicking edit on another box
-// add navbar with two pages
-// add join method 
+//add required to fields
+// add join method
+// remove scrollbar

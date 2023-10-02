@@ -160,6 +160,7 @@ function deleteExerciseInBox(event, workout, exerciseId) {
     }
 }
 function changeWorkoutInBox(event, workout, exerciseId) {
+    var form = document.querySelector(".form");
     var target = event.target;
     var parentElement = target.parentElement;
     var pExercise = parentElement.firstChild;
@@ -175,10 +176,7 @@ function changeWorkoutInBox(event, workout, exerciseId) {
             exerciseToUpdate.sets = exerciseSetsInput;
             exerciseToUpdate.reps = exerciseRepsInput;
             exerciseToUpdate.weight = exerciseWeightInput;
-            document.querySelector(".form__exercise-name").value = "";
-            document.querySelector(".form__exercise-sets").value = "";
-            document.querySelector(".form__exercise-reps").value = "";
-            document.querySelector(".form__exercise-weight").value = "";
+            form.reset();
         }
     }
 }
@@ -201,7 +199,10 @@ function editWorkout(event, workoutBox, workout, deleteButton) {
         xExercise.forEach(function (button) { return button.style.display = "flex"; });
         changeExercise.forEach(function (button) { return button.style.display = "flex"; });
         var updateButton_1 = createButton("updateButton", "Update", function (event) { return updateButtonHandler(event, workout, target, cancelButton_1, updateButton_1, workoutBox); });
-        var cancelButton_1 = createButton("cancelButton", "Cancel", function () { return cancelButtonHandler(target, cancelButton_1, updateButton_1, workoutBox); });
+        var cancelButton_1 = createButton("cancelButton", "Cancel", function () { return removeEditButtons(target, cancelButton_1, updateButton_1, workoutBox); });
+        cancelButton_1.addEventListener("click", function () {
+            location.reload();
+        });
         var nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         var dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
         var durationInput = createInput("number", "workout-duration temp-input", workout.duration.toString(), "Duration");
@@ -229,9 +230,9 @@ function updateButtonHandler(event, workout, editButton, cancelButton, updateBut
     workoutDurationElement.textContent = newWorkoutDuration + " Mins";
     console.log(workout);
     updateLocalStorage(workout);
-    cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox);
+    removeEditButtons(editButton, cancelButton, updateButton, workoutBox);
 }
-function cancelButtonHandler(editButton, cancelButton, updateButton, workoutBox) {
+function removeEditButtons(editButton, cancelButton, updateButton, workoutBox) {
     var tempInputs = workoutBox.querySelectorAll(".temp-input");
     var deleteButton = workoutBox.querySelector(".deleteButton");
     var xExercise = document.querySelectorAll(".xExercise");
@@ -312,8 +313,7 @@ function updateLocalStorage(updatedWorkout) {
         localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
     }
 }
-// add update local storage
 // fix bug with cancel button "updating"
-// fix bug with buttons showing when clicking edit on another box
-// add navbar with two pages
-// add join method 
+//add required to fields
+// add join method
+// remove scrollbar
