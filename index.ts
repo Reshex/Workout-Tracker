@@ -31,7 +31,6 @@ function addWorkout(event: MouseEvent) {
 
     const form = document.querySelector(".form ") as HTMLFormElement;
     const pendingExercisesDiv = document.querySelector(".pending-exercises") as HTMLDivElement;
-
     const workoutName = (document.querySelector(".form__workout-name") as HTMLInputElement).value;
     const workoutDate = (document.querySelector(".form__workout-date") as HTMLInputElement).value;
     const workoutDuration = Number((document.querySelector(".form__workout-duration") as HTMLInputElement).value);
@@ -42,15 +41,17 @@ function addWorkout(event: MouseEvent) {
     exercisesArray = [];
     form.reset();
     pendingExercisesDiv.textContent = "";
-    counter = 1
-    saveToLocalStorage(workout)
+    counter = 1;
+    saveToLocalStorage(workout);
 }
 
 function workoutBoxTemplate(workout: Workout) {
     const workoutBoxesDiv = document.querySelector(".workout-details") as HTMLDivElement;
     const existingWorkoutBox = document.getElementById(workout.id.toString());
+
     const workoutBox = document.createElement("div") as HTMLDivElement;
     workoutBox.classList.add("workout-box")
+
     const workoutBoxDetails = document.createElement("div") as HTMLDivElement;
     workoutBoxDetails.classList.add("workout-box-details")
 
@@ -181,7 +182,7 @@ function deleteExerciseInBox(event: MouseEvent, workout: Workout, exerciseId: nu
 
         workout.exercises.splice(exerciseToDeleteIndex, 1)
 
-        target.parentElement?.classList.add('removing'); // Add 'removing' class
+        target.parentElement?.classList.add('removing');
         setTimeout(() => {
             target.parentElement?.remove();
         }, 500);
@@ -209,7 +210,7 @@ function changeWorkoutInBox(event: MouseEvent, workout: Workout, exerciseId: num
             exerciseToUpdate.sets = exerciseSetsInput;
             exerciseToUpdate.reps = exerciseRepsInput;
             exerciseToUpdate.weight = exerciseWeightInput;
-            form.reset()
+            form.reset();
         }
     }
 }
@@ -222,7 +223,7 @@ function deleteWorkout(event: MouseEvent, workoutId: Number) {
     setTimeout(() => {
         parentElement.remove();
     }, 500);
-    deleteFromLocalStorage(workoutId)
+    deleteFromLocalStorage(workoutId);
 }
 
 function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Workout, deleteButton: HTMLInputElement) {
@@ -241,8 +242,8 @@ function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Wor
         const cancelButton = createButton("cancelButton", "Cancel", () => removeEditButtons(target, cancelButton, updateButton, workoutBox));
         cancelButton.addEventListener("click", () => {
             location.reload();
-            
-        })
+
+        });
         const nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         const dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
         const durationInput = createInput("number", "workout-duration temp-input", workout.duration.toString(), "Duration");
@@ -278,7 +279,7 @@ function updateButtonHandler(event: MouseEvent, workout: Workout, editButton: HT
     console.log(workout);
     updateLocalStorage(workout);
 
-    removeEditButtons(editButton, cancelButton, updateButton, workoutBox)
+    removeEditButtons(editButton, cancelButton, updateButton, workoutBox);
 }
 
 function removeEditButtons(editButton: HTMLInputElement, cancelButton: HTMLInputElement, updateButton: HTMLInputElement, workoutBox: HTMLDivElement) {
@@ -288,7 +289,7 @@ function removeEditButtons(editButton: HTMLInputElement, cancelButton: HTMLInput
     const changeExercise = document.querySelectorAll(".changeExercise") as NodeListOf<HTMLElement>;
 
     tempInputs.forEach(input => input.remove());
-    deleteButton?.classList.remove("hidden")
+    deleteButton?.classList.remove("hidden");
     xExercise.forEach(button => button.style.display = "none");
     changeExercise.forEach(button => button.style.display = "none");
 
@@ -297,25 +298,6 @@ function removeEditButtons(editButton: HTMLInputElement, cancelButton: HTMLInput
     updateButton.remove();
 
     editMode = false;
-
-}
-
-function createButton(className: string, value: string, clickHandler: any) {
-    const button = document.createElement("input");
-    button.type = "button";
-    button.className = className;
-    button.value = value;
-    button.addEventListener("click", clickHandler);
-    return button;
-}
-
-function createInput(type: string, className: string, value: string, placeholder: string) {
-    const input = document.createElement("input") as HTMLInputElement;
-    input.type = type;
-    input.className = className;
-    input.value = value;
-    input.placeholder = placeholder;
-    return input;
 }
 
 function saveToLocalStorage(workoutDetails: Workout) {
@@ -349,9 +331,7 @@ function loadFromLocalStorage() {
         if (Array.isArray(parsedWorkouts)) {
             parsedWorkouts.forEach((workout: Workout) => {
                 workoutBoxTemplate(workout);
-            })
-        } else {
-            console.error("Stored workouts is not an array.");
+            });
         }
     }
 }
@@ -381,3 +361,20 @@ function updateLocalStorage(updatedWorkout: Workout) {
     }
 }
 
+function createButton(className: string, value: string, clickHandler: any) {
+    const button = document.createElement("input");
+    button.type = "button";
+    button.className = className;
+    button.value = value;
+    button.addEventListener("click", clickHandler);
+    return button;
+}
+
+function createInput(type: string, className: string, value: string, placeholder: string) {
+    const input = document.createElement("input") as HTMLInputElement;
+    input.type = type;
+    input.className = className;
+    input.value = value;
+    input.placeholder = placeholder;
+    return input;
+}

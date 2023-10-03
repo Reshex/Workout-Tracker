@@ -152,7 +152,7 @@ function deleteExerciseInBox(event, workout, exerciseId) {
     if (target && exerciseToDelete) {
         var exerciseToDeleteIndex = workout.exercises.indexOf(exerciseToDelete);
         workout.exercises.splice(exerciseToDeleteIndex, 1);
-        (_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.classList.add('removing'); // Add 'removing' class
+        (_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.classList.add('removing');
         setTimeout(function () {
             var _a;
             (_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
@@ -246,22 +246,6 @@ function removeEditButtons(editButton, cancelButton, updateButton, workoutBox) {
     updateButton.remove();
     editMode = false;
 }
-function createButton(className, value, clickHandler) {
-    var button = document.createElement("input");
-    button.type = "button";
-    button.className = className;
-    button.value = value;
-    button.addEventListener("click", clickHandler);
-    return button;
-}
-function createInput(type, className, value, placeholder) {
-    var input = document.createElement("input");
-    input.type = type;
-    input.className = className;
-    input.value = value;
-    input.placeholder = placeholder;
-    return input;
-}
 function saveToLocalStorage(workoutDetails) {
     lastAssignedId++;
     workoutDetails.id = lastAssignedId;
@@ -289,9 +273,6 @@ function loadFromLocalStorage() {
                 workoutBoxTemplate(workout);
             });
         }
-        else {
-            console.error("Stored workouts is not an array.");
-        }
     }
 }
 function deleteFromLocalStorage(workoutId) {
@@ -312,4 +293,20 @@ function updateLocalStorage(updatedWorkout) {
         parsedWorkouts[index] = updatedWorkout;
         localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
     }
+}
+function createButton(className, value, clickHandler) {
+    var button = document.createElement("input");
+    button.type = "button";
+    button.className = className;
+    button.value = value;
+    button.addEventListener("click", clickHandler);
+    return button;
+}
+function createInput(type, className, value, placeholder) {
+    var input = document.createElement("input");
+    input.type = type;
+    input.className = className;
+    input.value = value;
+    input.placeholder = placeholder;
+    return input;
 }
