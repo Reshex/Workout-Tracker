@@ -313,6 +313,3 @@ function updateLocalStorage(updatedWorkout) {
         localStorage.setItem("workouts", JSON.stringify(parsedWorkouts));
     }
 }
-// fix bug with cancel button "updating"
-// add required to fields
-// add join method

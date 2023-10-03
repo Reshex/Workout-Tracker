@@ -381,6 +381,3 @@ function updateLocalStorage(updatedWorkout: Workout) {
     }
 }
 
-// fix bug with cancel button "updating"
-// add required to fields
-// add join method
