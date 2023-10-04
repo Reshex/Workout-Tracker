@@ -59,14 +59,14 @@ body {
   }
 
   input[type="submit"] {
-    padding: 10px 20px;
+    padding: 1vh 1vw;
     background-color: rgba(8, 163, 253, 0.959);
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
+    font-size: 1.2rem;
+    margin-top: 0.3vh;
   }
 
   input[type="submit"]:hover {
@@ -102,7 +102,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   max-width: fit-content;
-  gap: 10px;
+  gap: 1vw;
 
   .exercises-to-add {
     flex: 0 0 10%;
@@ -165,7 +165,7 @@ body {
     margin: 0.5vw;
     border-radius: 10px;
 
-    .excersices-area-div {
+    .exersices-area-div {
       width: 18vw;
       height: max-content;
       padding: 2vw;
@@ -216,13 +216,22 @@ body {
         background-color: $primary-color;
       }
 
+      .addExercise {
+        justify-content: center;
+        align-items: center;
+        width: 4.5vw;
+        margin-top: -3vh;
+        margin-bottom: 1vh;
+        margin-left: 7vw;
+      }
+
       .xExercise:hover,
       .changeExercise:hover {
         background-color: darken($secondary-color, 10%);
       }
 
       &::-webkit-scrollbar {
-        width: 8px;
+        width: 0.3vw;
       }
 
       &::-webkit-scrollbar-track {

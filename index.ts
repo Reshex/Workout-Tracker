@@ -79,7 +79,7 @@ function workoutBoxTemplate(workout: Workout) {
     workoutBox.appendChild(workoutName)
     workoutBox.appendChild(workoutDate)
     workoutBox.appendChild(workoutBoxDetails);
-    workoutExerciseInBox(workout, workoutBox)
+    workoutExercisesInBox(workout, workoutBox)
     workoutBox.appendChild(workoutDuration)
     workoutBox.appendChild(deleteButton);
     workoutBox.appendChild(editButton);
@@ -150,9 +150,13 @@ function deletePendingExercise(event: MouseEvent) {
     }
 }
 
-function workoutExerciseInBox(workout: Workout, workoutBox: HTMLDivElement) {
+function workoutExercisesInBox(workout: Workout, workoutBox: HTMLDivElement) {
     const excersicesAreaDiv = document.createElement("div") as HTMLDivElement;
-    excersicesAreaDiv.classList.add("excersices-area-div");
+    excersicesAreaDiv.classList.add("exersices-area-div");
+
+    const addExercises = createButton("addExercise", "Add", () => addWorkoutInBox(workout, workoutBox));
+    addExercises.classList.add("hidden")
+    excersicesAreaDiv.appendChild(addExercises);
 
     workout.exercises.forEach((exercise) => {
         const workoutExercises = document.createElement("p") as HTMLParagraphElement;
@@ -164,13 +168,33 @@ function workoutExerciseInBox(workout: Workout, workoutBox: HTMLDivElement) {
         const xExercise = createButton("xExercise", "X", (event: MouseEvent) => deleteExerciseInBox(event, workout, exercise.id)) as HTMLInputElement;
 
         workoutExercises.textContent = `${exercise.name} (${exercise.sets} X ${exercise.reps}) Weight: ${exercise.weight} kg`;
+
         exerciseWithButtonsDiv.appendChild(workoutExercises);
         exerciseWithButtonsDiv.appendChild(changeExercises);
         exerciseWithButtonsDiv.appendChild(xExercise);
         excersicesAreaDiv.appendChild(exerciseWithButtonsDiv);
-
     });
+
     workoutBox.appendChild(excersicesAreaDiv);
+}
+
+function addWorkoutInBox(workout: Workout, workoutBox: HTMLDivElement) {
+    const form = document.querySelector(".form") as HTMLFormElement;
+    let exerciseNameInput = (document.querySelector(".form__exercise-name") as HTMLInputElement).value;
+    let exerciseSetsInput = Number((document.querySelector(".form__exercise-sets") as HTMLInputElement).value);
+    let exerciseRepsInput = Number((document.querySelector(".form__exercise-reps") as HTMLInputElement).value);
+    let exerciseWeightInput = Number((document.querySelector(".form__exercise-weight") as HTMLInputElement).value);
+
+    const exercise = new Exercise(exerciseNameInput, exerciseSetsInput, exerciseRepsInput, exerciseWeightInput);
+
+    workout.exercises.push(exercise);
+
+    const exerciseDetails = document.createElement("p") as HTMLParagraphElement;
+    exerciseDetails.textContent = `${exercise.name} (${exercise.sets} X ${exercise.reps}) Weight: ${exercise.weight} kg`;
+
+    const exercisesAreaDiv = workoutBox.querySelector(".exersices-area-div") as HTMLDivElement;
+    exercisesAreaDiv.appendChild(exerciseDetails);
+    form.reset()
 }
 
 function deleteExerciseInBox(event: MouseEvent, workout: Workout, exerciseId: number) {
@@ -227,6 +251,7 @@ function deleteWorkout(event: MouseEvent, workoutId: Number) {
 }
 
 function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Workout, deleteButton: HTMLInputElement) {
+    const addExercise = workoutBox.querySelectorAll(".addExercise") as NodeListOf<HTMLElement>;
     const xExercise = workoutBox.querySelectorAll(".xExercise") as NodeListOf<HTMLElement>;
     const changeExercise = workoutBox.querySelectorAll(".changeExercise") as NodeListOf<HTMLElement>;
 
@@ -235,15 +260,12 @@ function editWorkout(event: MouseEvent, workoutBox: HTMLDivElement, workout: Wor
     if (target && !editMode) {
         target.classList.add("hidden");
         deleteButton.classList.add("hidden");
+        addExercise.forEach(button => button.style.display = "flex");
         xExercise.forEach(button => button.style.display = "flex");
         changeExercise.forEach(button => button.style.display = "flex");
 
         const updateButton = createButton("updateButton", "Update", (event: MouseEvent) => updateButtonHandler(event, workout, target, cancelButton, updateButton, workoutBox));
         const cancelButton = createButton("cancelButton", "Cancel", () => removeEditButtons(target, cancelButton, updateButton, workoutBox));
-        cancelButton.addEventListener("click", () => {
-            location.reload();
-
-        });
         const nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         const dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
         const durationInput = createInput("number", "workout-duration temp-input", workout.duration.toString(), "Duration");
@@ -268,9 +290,9 @@ function updateButtonHandler(event: MouseEvent, workout: Workout, editButton: HT
     workout.date = newWorkoutDate;
     workout.duration = newWorkoutDuration;
 
-    const workoutNameElement = workoutBox.querySelector(':first-child') as HTMLInputElement;
-    const workoutDateElement = workoutBox.querySelector(':nth-child(2)') as HTMLInputElement;
-    const workoutDurationElement = workoutBox.querySelector(':nth-child(5)') as HTMLInputElement;
+    const workoutNameElement = workoutBox.querySelector('.workout-name') as HTMLInputElement;
+    const workoutDateElement = workoutBox.querySelector('.workout-date') as HTMLInputElement;
+    const workoutDurationElement = workoutBox.querySelector('.workout-duration') as HTMLInputElement;
 
     workoutNameElement.textContent = newWorkoutName;
     workoutDateElement.textContent = newWorkoutDate;
@@ -296,6 +318,7 @@ function removeEditButtons(editButton: HTMLInputElement, cancelButton: HTMLInput
     editButton.classList.remove("hidden");
     cancelButton.remove();
     updateButton.remove();
+    location.reload();
 
     editMode = false;
 }
@@ -331,7 +354,7 @@ function loadFromLocalStorage() {
         if (Array.isArray(parsedWorkouts)) {
             parsedWorkouts.forEach((workout: Workout) => {
                 workoutBoxTemplate(workout);
-            });
+            })
         }
     }
 }

@@ -49,14 +49,14 @@ body {
   background-color: #001933;
 }
 .container input[type=submit] {
-  padding: 10px 20px;
+  padding: 1vh 1vw;
   background-color: rgba(8, 163, 253, 0.959);
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
+  font-size: 1.2rem;
+  margin-top: 0.3vh;
 }
 .container input[type=submit]:hover {
   background-color: rgba(1, 100, 158, 0.959);
@@ -87,7 +87,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   max-width: fit-content;
-  gap: 10px;
+  gap: 1vw;
 }
 .pending-exercises .exercises-to-add {
   flex: 0 0 10%;
@@ -147,7 +147,7 @@ body {
   margin: 0.5vw;
   border-radius: 10px;
 }
-.my-workouts .workout-box .excersices-area-div {
+.my-workouts .workout-box .exersices-area-div {
   width: 18vw;
   height: max-content;
   padding: 2vw;
@@ -157,7 +157,7 @@ body {
   max-height: 30vh;
   overflow-y: auto;
 }
-.my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv {
+.my-workouts .workout-box .exersices-area-div .exerciseWithButtonsDiv {
   display: flex;
   justify-content: space-between;
   text-align: center;
@@ -166,16 +166,16 @@ body {
   transform: translateY(0);
   transition: opacity 0.5s, transform 0.5s;
 }
-.my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv p {
+.my-workouts .workout-box .exersices-area-div .exerciseWithButtonsDiv p {
   min-width: 11vw;
   margin-left: 2vw;
 }
-.my-workouts .workout-box .excersices-area-div .exerciseWithButtonsDiv.removing {
+.my-workouts .workout-box .exersices-area-div .exerciseWithButtonsDiv.removing {
   opacity: 0;
   transform: translateY(-20px);
 }
-.my-workouts .workout-box .excersices-area-div .xExercise,
-.my-workouts .workout-box .excersices-area-div .changeExercise {
+.my-workouts .workout-box .exersices-area-div .xExercise,
+.my-workouts .workout-box .exersices-area-div .changeExercise {
   display: none;
   justify-content: center;
   align-items: center;
@@ -187,27 +187,35 @@ body {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-.my-workouts .workout-box .excersices-area-div .xExercise {
+.my-workouts .workout-box .exersices-area-div .xExercise {
   background-color: #ff3265;
 }
-.my-workouts .workout-box .excersices-area-div .changeExercise {
+.my-workouts .workout-box .exersices-area-div .changeExercise {
   background-color: #007bff;
 }
-.my-workouts .workout-box .excersices-area-div .xExercise:hover,
-.my-workouts .workout-box .excersices-area-div .changeExercise:hover {
+.my-workouts .workout-box .exersices-area-div .addExercise {
+  justify-content: center;
+  align-items: center;
+  width: 4.5vw;
+  margin-top: -3vh;
+  margin-bottom: 1vh;
+  margin-left: 7vw;
+}
+.my-workouts .workout-box .exersices-area-div .xExercise:hover,
+.my-workouts .workout-box .exersices-area-div .changeExercise:hover {
   background-color: #fe003f;
 }
-.my-workouts .workout-box .excersices-area-div::-webkit-scrollbar {
-  width: 8px;
+.my-workouts .workout-box .exersices-area-div::-webkit-scrollbar {
+  width: 0.3vw;
 }
-.my-workouts .workout-box .excersices-area-div::-webkit-scrollbar-track {
+.my-workouts .workout-box .exersices-area-div::-webkit-scrollbar-track {
   background-color: #f1f1f1;
 }
-.my-workouts .workout-box .excersices-area-div::-webkit-scrollbar-thumb {
+.my-workouts .workout-box .exersices-area-div::-webkit-scrollbar-thumb {
   background-color: #007bff;
   border-radius: 5px;
 }
-.my-workouts .workout-box .excersices-area-div::-webkit-scrollbar-thumb:hover {
+.my-workouts .workout-box .exersices-area-div::-webkit-scrollbar-thumb:hover {
   background-color: #0056b3;
 }
 .my-workouts .workout-box .temp-input {

@@ -69,7 +69,7 @@ function workoutBoxTemplate(workout) {
     workoutBox.appendChild(workoutName);
     workoutBox.appendChild(workoutDate);
     workoutBox.appendChild(workoutBoxDetails);
-    workoutExerciseInBox(workout, workoutBox);
+    workoutExercisesInBox(workout, workoutBox);
     workoutBox.appendChild(workoutDuration);
     workoutBox.appendChild(deleteButton);
     workoutBox.appendChild(editButton);
@@ -128,9 +128,12 @@ function deletePendingExercise(event) {
         }, 500);
     }
 }
-function workoutExerciseInBox(workout, workoutBox) {
+function workoutExercisesInBox(workout, workoutBox) {
     var excersicesAreaDiv = document.createElement("div");
-    excersicesAreaDiv.classList.add("excersices-area-div");
+    excersicesAreaDiv.classList.add("exersices-area-div");
+    var addExercises = createButton("addExercise", "Add", function () { return addWorkoutInBox(workout, workoutBox); });
+    addExercises.classList.add("hidden");
+    excersicesAreaDiv.appendChild(addExercises);
     workout.exercises.forEach(function (exercise) {
         var workoutExercises = document.createElement("p");
         var exerciseWithButtonsDiv = document.createElement("div");
@@ -144,6 +147,20 @@ function workoutExerciseInBox(workout, workoutBox) {
         excersicesAreaDiv.appendChild(exerciseWithButtonsDiv);
     });
     workoutBox.appendChild(excersicesAreaDiv);
+}
+function addWorkoutInBox(workout, workoutBox) {
+    var form = document.querySelector(".form");
+    var exerciseNameInput = document.querySelector(".form__exercise-name").value;
+    var exerciseSetsInput = Number(document.querySelector(".form__exercise-sets").value);
+    var exerciseRepsInput = Number(document.querySelector(".form__exercise-reps").value);
+    var exerciseWeightInput = Number(document.querySelector(".form__exercise-weight").value);
+    var exercise = new Exercise(exerciseNameInput, exerciseSetsInput, exerciseRepsInput, exerciseWeightInput);
+    workout.exercises.push(exercise);
+    var exerciseDetails = document.createElement("p");
+    exerciseDetails.textContent = exercise.name + " (" + exercise.sets + " X " + exercise.reps + ") Weight: " + exercise.weight + " kg";
+    var exercisesAreaDiv = workoutBox.querySelector(".exersices-area-div");
+    exercisesAreaDiv.appendChild(exerciseDetails);
+    form.reset();
 }
 function deleteExerciseInBox(event, workout, exerciseId) {
     var _a;
@@ -190,19 +207,18 @@ function deleteWorkout(event, workoutId) {
     deleteFromLocalStorage(workoutId);
 }
 function editWorkout(event, workoutBox, workout, deleteButton) {
+    var addExercise = workoutBox.querySelectorAll(".addExercise");
     var xExercise = workoutBox.querySelectorAll(".xExercise");
     var changeExercise = workoutBox.querySelectorAll(".changeExercise");
     var target = event.target;
     if (target && !editMode) {
         target.classList.add("hidden");
         deleteButton.classList.add("hidden");
+        addExercise.forEach(function (button) { return button.style.display = "flex"; });
         xExercise.forEach(function (button) { return button.style.display = "flex"; });
         changeExercise.forEach(function (button) { return button.style.display = "flex"; });
         var updateButton_1 = createButton("updateButton", "Update", function (event) { return updateButtonHandler(event, workout, target, cancelButton_1, updateButton_1, workoutBox); });
         var cancelButton_1 = createButton("cancelButton", "Cancel", function () { return removeEditButtons(target, cancelButton_1, updateButton_1, workoutBox); });
-        cancelButton_1.addEventListener("click", function () {
-            location.reload();
-        });
         var nameInput = createInput("text", "workout-name temp-input", workout.name, "Workout Name");
         var dateInput = createInput("date", "workout-date temp-input", workout.date, "Date");
         var durationInput = createInput("number", "workout-duration temp-input", workout.duration.toString(), "Duration");
@@ -222,9 +238,9 @@ function updateButtonHandler(event, workout, editButton, cancelButton, updateBut
     workout.name = newWorkoutName;
     workout.date = newWorkoutDate;
     workout.duration = newWorkoutDuration;
-    var workoutNameElement = workoutBox.querySelector(':first-child');
-    var workoutDateElement = workoutBox.querySelector(':nth-child(2)');
-    var workoutDurationElement = workoutBox.querySelector(':nth-child(5)');
+    var workoutNameElement = workoutBox.querySelector('.workout-name');
+    var workoutDateElement = workoutBox.querySelector('.workout-date');
+    var workoutDurationElement = workoutBox.querySelector('.workout-duration');
     workoutNameElement.textContent = newWorkoutName;
     workoutDateElement.textContent = newWorkoutDate;
     workoutDurationElement.textContent = newWorkoutDuration + " Mins";
@@ -244,6 +260,7 @@ function removeEditButtons(editButton, cancelButton, updateButton, workoutBox) {
     editButton.classList.remove("hidden");
     cancelButton.remove();
     updateButton.remove();
+    location.reload();
     editMode = false;
 }
 function saveToLocalStorage(workoutDetails) {
