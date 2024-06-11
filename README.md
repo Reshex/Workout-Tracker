@@ -1,5 +1,3 @@
 An application for the gym goers.
 
-a front application about tracking your workout progress,
-this is a project in order to put up for a test my vanilla ts capabilities,
-I have only used html, scss, and typescript in order to do this app
+This is a front-end application for tracking your workout progress. This project is a test of my vanilla TypeScript capabilities. I have used only HTML, SCSS, and TypeScript to develop this app.
